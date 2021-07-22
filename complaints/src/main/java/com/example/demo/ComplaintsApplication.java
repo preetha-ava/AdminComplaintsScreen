@@ -51,7 +51,7 @@ public class ComplaintsApplication {
 			@Override
 			public void run(String... args) throws Exception {
 				
-				EmployeeInfo employee4 = new EmployeeInfo(7, "dhivya", 878764310 , "Arvinth" , "CabProject" , "Rohit", 0,0,  null, null, null, null, null);
+				EmployeeInfo employee4 = new EmployeeInfo(7, "abi", 878764310 , "Arvinth" , "CabProject" , "Rohit", 0,0,  null, null, null, null, null);
 				this.empRepo.save(employee4);
 				BookingRequest booking=new BookingRequest(1,1,"Preetha",1,"inproper dress code","alpha city","Tambaram","AGS",null,LocalTime.of(10, 30),null,null,null,null,null,null,null);
 				this.bookingRepo.save(booking); 
@@ -65,7 +65,7 @@ public class ComplaintsApplication {
 				this.bookingRepo.save(booking5);
 				BookingRequest booking6 = new BookingRequest(6, 6, "aruna", 1, "Drunk  ", "Alpha city", "Tambaram", "doller", null, LocalTime.of(10, 30), null, null, null, null, null, null, null);
 				this.bookingRepo.save(booking6);
-				BookingRequest booking7 = new BookingRequest(7, 7, "dhivya", 1, "Drunk  ", "Alpha city", "Tambaram", "doller", null, LocalTime.of(10, 30), null, null, null, null, null, null, null);
+				BookingRequest booking7 = new BookingRequest(7, 7, "abi", 1, "Drunk  ", "Alpha city", "Tambaram", "doller", null, LocalTime.of(10, 30), null, null, null, null, null, null, null);
 				this.bookingRepo.save(booking7);
 				
 				
