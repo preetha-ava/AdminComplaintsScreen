@@ -33,6 +33,11 @@ public class BusinessLayer {
 		return this.service.updateRemarks(bookingId,remark);
 	}
 
+	public Long getCount() {
+		
+		return this.service.getcount();
+	}
+
 	
 
 

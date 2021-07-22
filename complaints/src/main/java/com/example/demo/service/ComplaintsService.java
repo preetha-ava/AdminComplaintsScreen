@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -116,5 +117,11 @@ public BookingRequest updateRemarks(long bookingId, String remark) {
 	BookingRequest request = requestOpt.get();
 	request.setRemarks(remark);
 	return this.repo.save(request);
+}
+
+
+public Long getcount() {
+	List<BookingRequest> tripcount=this.repo.findAll();
+	return (long) tripcount.size()  ;
 }
 }

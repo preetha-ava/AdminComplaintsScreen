@@ -57,7 +57,7 @@ public class ComplaintsController {
      public ResponseEntity<List<UserComplaints>> getComplaintsScreen(){
 	
 	   List<UserComplaints> trip=  this.BL.getComplaintsScreen();
-	   System.out.println("in");
+	   
 	return  ResponseEntity.status(HttpStatus.OK).body(trip);
 	}
    
@@ -77,6 +77,12 @@ public class ComplaintsController {
  	 List<BookingRequest> cabs=this.template.find(query, BookingRequest.class,"BookingRequest");
  	 return cabs;
   }
+  //To get the data count
+	@GetMapping(path = "/count")
+	public ResponseEntity<Long> getCount() {
+		Long count = this.BL.getCount();
+		return ResponseEntity.status(HttpStatus.OK).body(count);
+	}
   
  
 

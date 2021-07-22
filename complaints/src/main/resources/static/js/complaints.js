@@ -1,11 +1,11 @@
 
 
-//window.onload=getComplaints;
-var xhrCount=new XMLHttpRequest();
 
-var responseRequest;
 
 window.onload=getComplaints;
+
+
+var xhrCount= new XMLHttpRequest();
 //document.getElementById("pills-tabContent").addEventListener('click',getComplaints());
 	//event.preventDefault();
 	function getComplaints(){
@@ -14,7 +14,20 @@ window.onload=getComplaints;
     	xhrCount.onreadystatechange=processResponseCount;
         xhrCount.send(null);
 }
-
+		  var xhrCounts= new XMLHttpRequest();
+    function getTotalCount(){
+    	xhrCounts.open("GET","http://localhost:8080/api/v1/count",true);
+    	xhrCounts.onreadystatechange=processResponseCount1;
+         xhrCounts.send(null);
+      }
+    var count;
+    function processResponseCount1(){
+    	  if(xhrCounts.readyState == 4 && xhrCounts.status == 200){
+    		 count= JSON.parse(xhrCounts.responseText);
+    	        
+    	  }
+    }
+ getTotalCount();
     	
    function processResponseCount(){
     	 if(xhrCount.readyState == 4 && xhrCount.status == 200){
@@ -22,7 +35,7 @@ window.onload=getComplaints;
 		//$("#table-body").empty();
 				
     		  var arr = JSON.parse(xhrCount.responseText);
-    		  
+    
     		    for(var i=0;i<arr.length; i++){
 
  	  // creating row and data
@@ -74,10 +87,35 @@ window.onload=getComplaints;
           divObj4.innerText = arr[i].driverName;
            divObj5.innerText = arr[i].requests.source;
           divObj6.innerText = arr[i].requests.droppoint;
-         divObj7.innerText = arr[i].datesOfTravel;
-         divObj8.innerText = arr[i].requests.timeslot;
+          var date = arr[i].datesOfTravel;
+          var splitDate = date.split("-");
+          
+         divObj7.innerText = splitDate[2] +"-"+ splitDate[1] +"-"+ splitDate[0];
+      	// var timeSlotOption = divObj8.innerText ;
+         var slot = arr[i].requests.timeslot;
+            var slotSplitted = slot.split(":");
+            slotHour = slotSplitted[0];
+            if(slotHour < 12){
+                if(slotHour == 00 ){
+                    divObj8.innerText ="12" + ":" + slotSplitted[1] +  " AM";
+                }else{
+                    divObj8.innerText  =slotHour + ":" + slotSplitted[1] +  " AM";
+                }
+               
+            }else{
+                slotHour = slotHour - 12 ;
+                if(slotHour < 10){
+                    divObj8.innerText  = "0" + slotHour + ":" + slotSplitted[1] + " PM";
+                   
+                }if(slotHour == 0 ){
+                    divObj8.innerText  = "12"+ ":" + slotSplitted[1] + " PM";
+                }
+                else{
+                    divObj8.innerText  =   slotHour + ":" + slotSplitted[1] +" PM";
+                }
+            }
          divObj9.innerText = arr[i].requests.complaintDescription;
-         divObj10.innerHTML="<div class='dropdown show'><a href='#' title='Remarks' class='align-img' data-toggle='dropdown' aria-expanded='true'><img class='cursor' src='images/remarks.svg' alt='remarks-icon'></a><div class='dropdown-menu m-0 p-3 user-filter show' x-placement='top-start' style='position: absolute; transform: translate3d(-347px, -174px, 0px); top: 0px; left: 0px; will-change: transform;'><div class='container-fluid'><div class='row'><div class='col-md-12 mb-3'><div class='col-md-12 pb-2 border-0 mb-3'><button type='button' class='btn-close float-end close-filter' data-dismiss='user-filter' aria-label='Close'></button></div><h5 class='h-size1 mb-2'>Enter Remarks</h5><input type='text' class='form-control border-filter-style' id='remarks"+i+"'></div><div class='col-md-12'><button type='button' class='save-btn float-end' onclick='saveRemarks(this)'>Save</button><button type='button' class='cancel1-btn float-end '>Cancel</button></div><div></div></div></div>";
+         divObj10.innerHTML="<div class='dropdown'><a href='#' title='Remarks' class='align-img' data-toggle='dropdown' aria-expanded='false'><img class='cursor' src='images/remarks.svg' alt='remarks-icon'></a><div class='dropdown-menu m-0 p-3 user-filter' ><div class='container-fluid'><div class='row'><div class='col-md-12 mb-3'><div class='col-md-12 pb-2 border-0 mb-3'><button type='button' class='btn-close float-end close-filter' data-dismiss='user-filter' aria-label='Close'></button></div><h5 class='h-size1 mb-2'>Enter Remarks</h5><input type='text' class='form-control border-filter-style' id='remarks"+i+"'></div><div class='col-md-12'><button type='button' class='save-btn float-end' onclick='saveRemarks(this)'>Save</button><button type='button' class='cancel1-btn float-end '>Cancel</button></div><div></div></div></div>";
           divObj11.innerText = arr[i].requests.bookingId;
             
         trow.appendChild(divObj);
@@ -92,17 +130,21 @@ window.onload=getComplaints;
          trow.appendChild(divObj9);
           trow.appendChild(divObj10);
           trow.appendChild(divObj11);
+          
          
+          
    
         
         document.getElementById("table-body").appendChild(trow);
-     
+      var countSpan=document.getElementById("count");
+     countSpan.innerHTML="Records  :"+$('#table-body tr').length+" out of "+count;
+     document.getElementById("record").appendChild(countSpan);
      
 }
 }
 
 }
-
+           
 function saveRemarks(obj){
 	//alert(obj.closest("input").id);
 	trowId = obj.closest("tr").id;
