@@ -46,56 +46,35 @@ public class ComplaintsService {
 	}
 //ctrl + o - to list functions
   
-
+//
 public List<UserComplaints>  getComplaintsScreen() {
-	
-	//UserComplaints uc = new UserComplaints();
-	List<UserComplaints> uc =new ArrayList<>();
-//	Query query = new Query();
-//	Criteria c1 = Criteria.where("remarks").is(null);
-//	Criteria c2 = Criteria.where("complaintDescription").ne(null);
-//	Criteria c = new Criteria();
-//	c.andOperator(c1,c2);
-//	query.addCriteria(c);
-//	query.skip(skip).limit(limit);
-//	List<BookingRequest> bookings = this.template.find(query, BookingRequest.class);
-	List<BookingRequest> bookings =  this.repo.findBycomplaintDescription();
-	
-//	for(BookingRequest request :bookings) {
-//	
-//		uc.add(new UserComplaints(request, setEmpNo(request.getEmployeeId()),getDriverName(request.getTripCabId()) , getCabNumber(request.getTripCabId()), getDateOfTravel(request.getTripCabId())));
-//	}
-	
-	
-	
+List<UserComplaints> uc =new ArrayList<>();
+//get complaintsdescription from bookingrepository
+List<BookingRequest> bookings =  this.repo.findBycomplaintDescription();
 	Long empNumbers = null;
 	String cabNumbers = null;
 	LocalDate dates = null;
 	String driver = null;
  	
-   //Long	empNumbers=null;
-   
-	for(BookingRequest eachBook:bookings) {
+  for(BookingRequest eachBook:bookings) {
+// By using employeeId getting
+  Optional<EmployeeInfo> empOp = this.empRepo.findById(eachBook.getEmployeeId());
 		
-		Optional<EmployeeInfo> empOp = this.empRepo.findById(eachBook.getEmployeeId());
+  EmployeeInfo emp  = empOp.get();
 		
-		EmployeeInfo emp  = empOp.get();
+  empNumbers=emp.getEmployeeNumber();
 		
-		//empNumbers.add(emp.getEmployeeNumber());
-		empNumbers=emp.getEmployeeNumber();
+  Optional<com.example.demo.entity.TripCabInfo> tripCabOp = this.tripRepo.findById(eachBook.getTripCabId());
 		
-	Optional<com.example.demo.entity.TripCabInfo> tripCabOp = this.tripRepo.findById(eachBook.getTripCabId());
-		
-	TripCabInfo trip = tripCabOp.get();
+  TripCabInfo trip = tripCabOp.get();
 	
-	//cabNumbers.add(trip.getCabNumber());
-	cabNumbers=trip.getCabNumber();
-	//dates.add(trip.getDateoftravel());
+  cabNumbers=trip.getCabNumber();
+	
 	dates=trip.getDateoftravel();
 		Optional<com.example.demo.entity.DriverInfo> driverOp = this.repo1.findById(trip.getDriverid());
 		 driver = driverOp.get().getDriverName();
 		
-		//driverNames.add(driver.getDriverName());
+	
 		 UserComplaints userComplaints = new UserComplaints();
 		 userComplaints.setDatesOfTravel(dates);
 		 userComplaints.setDriverName(driver);
@@ -107,11 +86,9 @@ public List<UserComplaints>  getComplaintsScreen() {
 		
 	}
 	
-	
-	
-	
 	return uc;
 }
+//Admin sends a response by passing bookingID and remarks to database 
 public BookingRequest updateRemarks(long bookingId, String remark) {
 	Optional<BookingRequest> requestOpt = this.repo.findById(bookingId);
 	BookingRequest request = requestOpt.get();
@@ -119,7 +96,7 @@ public BookingRequest updateRemarks(long bookingId, String remark) {
 	return this.repo.save(request);
 }
 
-
+//Function-to get the data count.
 public Long getcount() {
 	List<BookingRequest> tripcount=this.repo.findAll();
 	return (long) tripcount.size()  ;

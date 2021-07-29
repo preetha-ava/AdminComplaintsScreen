@@ -12,9 +12,7 @@ public interface BookingRequestRepository extends MongoRepository<BookingRequest
 
 	TripCabInfo save(TripCabInfo info);
 
-	
-
-	@Query(value = "{remarks:null,complaintDescription:{$nin:[null]}}")
+   @Query(value = "{remarks:null,complaintDescription:{$nin:[null]}}")
 	List<BookingRequest> findBycomplaintDescription();
 
 }

@@ -39,19 +39,16 @@ import com.example.demo.service.ComplaintsService;
 @RestController
 @RequestMapping(path="/api/v1")
 public class ComplaintsController {
-
-   
-    
-     
      @Autowired
      BusinessLayer BL;
      
      @Autowired
      MongoTemplate template;
      
-     
+// -------------------------***----------------------------------------// 
 	
-	//findAll method 
+    // FindAll method--->starts
+    //Find by Complaintsdesp
    @GetMapping(path="/complaints/complaintsdesp")
 
      public ResponseEntity<List<UserComplaints>> getComplaintsScreen(){
@@ -60,14 +57,15 @@ public class ComplaintsController {
 	   
 	return  ResponseEntity.status(HttpStatus.OK).body(trip);
 	}
-   
+// -------------------------***----------------------------------------// 
+ //@PutMapping annotation is used to map "/booking/{id}"Http PUT  request onto a specific handler method-update remark
    @PutMapping(path = "/remarks/{bookingId}/{remark}")
    public ResponseEntity<BookingRequest> updateRemark(@PathVariable("bookingId") long bookingId,@PathVariable("remark") String remark){
 	   BookingRequest req = this.BL.updateRemark(bookingId,remark);
 	   return  ResponseEntity.status(HttpStatus.OK).body(req);
    }
    
-   
+// -------------------------***----------------------------------------//   
  // Scroll method with MongoTemplate   
   @GetMapping(path="/scroll/{skip}/{limit}")
   public List<BookingRequest> getByScroll(@PathVariable("skip") long skip,@PathVariable("limit") int limit){
@@ -77,6 +75,7 @@ public class ComplaintsController {
  	 List<BookingRequest> cabs=this.template.find(query, BookingRequest.class,"BookingRequest");
  	 return cabs;
   }
+//-------------------------***----------------------------------------// 
   //To get the data count
 	@GetMapping(path = "/count")
 	public ResponseEntity<Long> getCount() {
