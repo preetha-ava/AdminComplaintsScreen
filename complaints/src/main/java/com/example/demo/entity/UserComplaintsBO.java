@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserComplaints {
+public class UserComplaintsBO {
 
 	BookingRequest requests;
 	Long empNumbers;

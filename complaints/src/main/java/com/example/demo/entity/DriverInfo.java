@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Document(collection = "DriverInfo")
 public class DriverInfo {
 	@Id
- private long driverid;
+ private long driverId;
  private String driverName;
  private String password;
  private long drivernumber;
@@ -33,7 +33,7 @@ public class DriverInfo {
 public DriverInfo(long driverid, String driverName, String password, long drivernumber, long licensenumber,
 		LocalDate expirydate, String createdby, String createddate, String modifiedby, String modifieddate) {
 	super();
-	this.driverid = driverid;
+	this.driverId = driverid;
 	this.driverName = driverName;
 	this.password = password;
 	this.drivernumber = drivernumber;

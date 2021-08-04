@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @Document(collection="Employee")
 public class EmployeeInfo {
 	@Id
- long employeeId;
- String EmployeeName;
- long EmployeeNumber;
+ String employeeId;
+ String employeeName;
+ long employeeNumber;
  String domainlead;
  String projectName;
  String projectLead;

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AccessLevel;
@@ -16,9 +17,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level=AccessLevel.PRIVATE)
-@Document(collation = "Complaints")
+@Document(collection  = "Complaints")
 public class ComplaintsBO {
 	
+	
+	@Id
 	String complaintDescription;
+	
 
 }

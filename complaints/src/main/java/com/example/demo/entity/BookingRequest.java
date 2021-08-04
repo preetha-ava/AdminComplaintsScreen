@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class BookingRequest {
 	@Id
   private long bookingId;
-  private long employeeId;
+  private String employeeId;
   private String employeeName;
   private long tripCabId;
   private String complaintDescription;

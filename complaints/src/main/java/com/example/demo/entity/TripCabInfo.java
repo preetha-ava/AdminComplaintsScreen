@@ -19,31 +19,31 @@ import lombok.NoArgsConstructor;
 @Document(collection="TripCabInfo")
 public class TripCabInfo {
 	@Id
-	private long tripCabId;
+	private  long tripCabId;
 	private String cabNumber;
-	private long driverid;
+	private long driverId;
 	private String source;
-	private LocalTime timeSlot;
-	private String cabmodel;
 	private String destination;
-	private String droppoint;
-	private LocalDate dateoftravel;
-	private long totalseats;
-	private long remainingseats;
-	private long allocatedseats;
-	private LocalDate starttime;
-	private LocalDate endtime;
-	private String createdby;
-	private String createddate;
-	private String modifiedby;
-	private String modifieddate;
-	public TripCabInfo(long tripCabId, String cabNumber, long driverid,LocalDate dateoftravel) {
+	private LocalDate dateOfTravel;
+	private LocalTime timeSlot;
+	private int totalSeats;
+	private int allocatedSeats;
+	private int remainingSeats;
+	private String status;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private String CreatedBy;
+	   private LocalDate CreatedDate;
+	private String ModifiedBy;
+	private LocalDate modifiedDate;
+	private int isDeleted;
+	public TripCabInfo(long tripCabId, String cabNumber, long driverId,LocalDate dateoftravel) {
 		super();
 		this.tripCabId = tripCabId;
 		this.cabNumber = cabNumber;
-		this.driverid = driverid;
+		this.driverId = driverId;
 		
-		this.dateoftravel=dateoftravel;
+		this.dateOfTravel=dateoftravel;
 		
 	}
 	

@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,19 +11,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Document(collection="Source")
-public class SourceBO {
+@NoArgsConstructor
+@Document(collection = "Destination")
+public class DestinationBO {
 	
 	@Id
-	private String source;
+	private String destination;
+	List<DropPointBO> dropPoints;
+	List<TimeslotBO> timeSlots;
 	String createdBy;
 	LocalDateTime createdDate;
 	String modifiedBy;
 	LocalDateTime modifiedDate;
 	int isDeleted;
-
 	
 
 }

@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.entity.BookingRequest;
+import com.example.demo.entity.DestinationBO;
+import com.example.demo.entity.SourceBO;
 import com.example.demo.entity.TripCabInfo;
-import com.example.demo.entity.UserComplaints;
+import com.example.demo.entity.UserComplaintsBO;
 import com.example.demo.service.ComplaintsService;
 @Component
 public class BusinessLayer {
@@ -21,7 +23,7 @@ public class BusinessLayer {
 		return this.service.save(info);
 	}
 
-	public List<UserComplaints>  getComplaintsScreen() {
+	public List<UserComplaintsBO>  getComplaintsScreen() {
 
 		return this.service.getComplaintsScreen();
 	}
@@ -38,7 +40,20 @@ public class BusinessLayer {
 		return this.service.getcount();
 	}
 
-	
+	public List<SourceBO> getSource() {
+		// TODO Auto-generated method stub
+		return this.service.getSource();
+	}
+
+	public List<DestinationBO> getDestination() {
+		// TODO Auto-generated method stub
+		return this.service.getDestination();
+	}
+
+public List<UserComplaintsBO> getBySearch(String text, long skip, int limit) {
+		
+		return this.service.getBySearch(text,skip,limit);
+	}
 
 
 }

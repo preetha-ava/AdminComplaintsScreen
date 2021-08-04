@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +27,14 @@ import com.example.demo.BL.BusinessLayer;
 import com.example.demo.entity.BookingRequest;
 
 import com.example.demo.entity.DriverInfo;
-import com.example.demo.entity.DropPointBO;
+import com.example.demo.entity.EmployeeInfo;
+import com.example.demo.entity.DestinationBO;
 import com.example.demo.entity.SourceBO;
 import com.example.demo.entity.TripCabInfo;
-import com.example.demo.entity.UserComplaints;
-import com.example.demo.repo.DropPointRepository;
+import com.example.demo.entity.UserComplaintsBO;
+import com.example.demo.repo.BookingRequestRepository;
+import com.example.demo.repo.DestinationRepository;
+import com.example.demo.repo.DriverInfoRepository;
 import com.example.demo.repo.EmployeeRepository;
 import com.example.demo.repo.SourceRepository;
 import com.example.demo.repo.TimeSlotRepository;
@@ -45,15 +51,40 @@ public class ComplaintsController {
      @Autowired
      MongoTemplate template;
      
+     @Autowired
+ 	BookingRequestRepository repo;
+ 	
+ 	@Autowired
+ 	DriverInfoRepository repo1;
+ 	
+ 	@Autowired
+ 	EmployeeRepository empRepo;
+ 	
+ 	@Autowired
+ 	SourceRepository srcRepo;
+ 	
+ 	@Autowired
+ 	DestinationRepository destRepo;
+ 	
+ 	@Autowired
+ 	ComplaintsService service;
+ 	
+ 	
+ 	@Autowired
+ 	com.example.demo.repo.TripCabInfoRepository tripRepo;
+     
+     
+    
+     
 // -------------------------***----------------------------------------// 
 	
     // FindAll method--->starts
     //Find by Complaintsdesp
    @GetMapping(path="/complaints/complaintsdesp")
 
-     public ResponseEntity<List<UserComplaints>> getComplaintsScreen(){
+     public ResponseEntity<List<UserComplaintsBO>> getComplaintsScreen(){
 	
-	   List<UserComplaints> trip=  this.BL.getComplaintsScreen();
+	   List<UserComplaintsBO> trip=  this.BL.getComplaintsScreen();
 	   
 	return  ResponseEntity.status(HttpStatus.OK).body(trip);
 	}
@@ -85,11 +116,122 @@ public class ComplaintsController {
   
  
 
+	@GetMapping(path = "/source")
+	public ResponseEntity<List<SourceBO>> getSource(){
+		
+		List<SourceBO> sources= this.BL.getSource();
+		return ResponseEntity.status(HttpStatus.OK).body(sources);
+		
+	}
+ 
+	@GetMapping(path = "/destination")
+	public ResponseEntity<List<DestinationBO>> getDestination(){
+		
+		List<DestinationBO> destinations= this.BL.getDestination();
+		return ResponseEntity.status(HttpStatus.OK).body(destinations);
+		
+	}
 
  
+//-------------------**********---------------------------------------
+	//filter
+	
+	@GetMapping(path = "/filter/{source}/{destination}/{timeSlot}")
+	public ResponseEntity<List<UserComplaintsBO>> filter(@PathVariable ("source") String source,@PathVariable ("destination") String destination,@PathVariable ("timeSlot") String timeSlot){
+		
+		
+		Query dynamicQuery = new Query();
+		if (!(source.equals("0"))) {
+			Criteria sourceCriteria = Criteria.where("source").is(source);
+			dynamicQuery.addCriteria(sourceCriteria);
+		}
+		if (!(destination.equals("0"))) {
+			Criteria destinationCriteria = Criteria.where("destination").is(destination);
+			dynamicQuery.addCriteria(destinationCriteria);
 
- 
+		}
+		
+		Criteria criteria1 = Criteria.where("complaintDescription").ne(null);
+		Criteria criteria2= Criteria.where("remarks").is(null);
+		Criteria criteria3= new Criteria();
+		criteria3.andOperator(criteria1,criteria2);
+		dynamicQuery.addCriteria(criteria3);
+		
+		List<UserComplaintsBO> uc =new ArrayList<>();
+		//get complaintsdescription from bookingrepository
+		List<BookingRequest> bookings =  this.template.find(dynamicQuery, BookingRequest.class);
+			Long empNumbers = null;
+			String cabNumbers = null;
+			LocalDate dates = null;
+			String driver = null;
+		 	
+		  for(BookingRequest eachBook:bookings) {
+		// By using employeeId getting
+		  Optional<EmployeeInfo> empOp = this.empRepo.findById(eachBook.getEmployeeId());
+				
+		  EmployeeInfo emp  = empOp.get();
+				
+		  empNumbers=emp.getEmployeeNumber();
+				
+		  Optional<TripCabInfo> tripCabOp = this.tripRepo.findById(eachBook.getTripCabId());
+				
+		  TripCabInfo trip = tripCabOp.get();
+			
+		  cabNumbers=trip.getCabNumber();
+			
+			dates=trip.getDateOfTravel();
+				Optional<DriverInfo> driverOp = this.repo1.findById(trip.getDriverId());
+				 driver = driverOp.get().getDriverName();
+				
+			
+				 UserComplaintsBO userComplaints = new UserComplaintsBO();
+				 userComplaints.setDatesOfTravel(dates);
+				 userComplaints.setDriverName(driver);
+				 userComplaints.setEmpNumbers(empNumbers);
+				 userComplaints.setCabNumbers(cabNumbers);
+				 userComplaints.setRequests(eachBook);
+				 
+				 uc.add(userComplaints);
+				
+			}
+
+		  if (!(timeSlot.equals("0"))) {
+
+				LocalTime lt = LocalTime.parse(timeSlot);
+				List<UserComplaintsBO> timeFilter = uc.stream().filter(e -> e.getRequests().getTimeslot().equals(lt))
+						.collect(Collectors.toList());
+				
+				return ResponseEntity.status(HttpStatus.OK).body(timeFilter);
+			}
+		
+		return  ResponseEntity.status(HttpStatus.OK).body(uc);
+		
+	}
  
    
-}
 
+//-----------------******--------------------------//
+
+//search method starts here
+@GetMapping(path = "/{searchValue}/{skip}/{limit}")
+public ResponseEntity<List<UserComplaintsBO>> getByTextSearch(@PathVariable("searchValue") String text,
+		@PathVariable("skip") long skip, @PathVariable("limit") int limit){
+	
+	List<UserComplaintsBO> uc = this.BL.getBySearch(text, skip, limit);
+	return ResponseEntity.status(HttpStatus.OK).body(uc);
+}
+//search method ends here
+//--------------------********----------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+}
